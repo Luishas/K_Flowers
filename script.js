@@ -95,53 +95,67 @@ function random(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-function drawFlower(x, y) {
+function drawFlowerAnimated(x, y, callback) {
     const petals = Math.floor(random(6, 10));
     const radius = random(30, 50);
 
-    for (let i = 0; i < petals; i++) {
-        const angle = (Math.PI * 2 / petals) * i;
+    let currentPetal = 0;
 
-        ctx.save(); // guarda estado
+    function drawNextPetal() {
+        if (currentPetal >= petals) {
+            // centro 🌼
+            ctx.beginPath();
+            ctx.fillStyle = "yellow";
+            ctx.arc(x, y, radius / 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (callback) callback();
+            return;
+        }
+
+        const angle = (Math.PI * 2 / petals) * currentPetal;
+
+        ctx.save();
         ctx.translate(x, y);
         ctx.rotate(angle);
 
         ctx.beginPath();
         ctx.fillStyle = `hsl(${random(0,360)}, 80%, 60%)`;
 
-        // pétalo tipo hoja 🌿
         ctx.moveTo(0, 0);
         ctx.quadraticCurveTo(radius, -radius, 0, -radius * 2);
         ctx.quadraticCurveTo(-radius, -radius, 0, 0);
 
         ctx.fill();
 
-        ctx.restore(); // vuelve al estado original
+        ctx.restore();
+
+        currentPetal++;
+
+        setTimeout(drawNextPetal, 120); // 👈 velocidad animación
     }
 
-    // centro 🌼
-    ctx.beginPath();
-    ctx.fillStyle = "yellow";
-    ctx.arc(x, y, radius / 4, 0, Math.PI * 2);
-    ctx.fill();
-
-    // tallo 🌿
-    ctx.beginPath();
-    ctx.strokeStyle = "green";
-    ctx.moveTo(x, y);
-    ctx.lineTo(x, y + 50);
-    ctx.stroke();
+    drawNextPetal();
 }
+function drawGardenAnimated() {
+    let i = 0;
 
-function drawGarden() {
-    for (let i = 0; i < 8; i++) {
+    function nextFlower() {
+        if (i >= 8) return;
+
         const x = random(100, 700);
         const y = random(100, 500);
-        drawFlower(x, y);
+
+        drawFlowerAnimated(x, y, () => {
+            i++;
+            setTimeout(nextFlower, 300); // delay entre flores
+        });
     }
+
+    nextFlower();
 }
 
-drawGarden();
+drawGardenAnimated();
 
 document.getElementById("message").innerText =
     "Karla " + messages[Math.floor(Math.random() * messages.length)];
