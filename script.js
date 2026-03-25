@@ -1,11 +1,13 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 ctx.shadowBlur = 15;
 ctx.shadowColor = "white";
 
+// 🌌 estrellas
 let stars = [];
 for (let i = 0; i < 80; i++){
     stars.push({
@@ -19,19 +21,21 @@ for (let i = 0; i < 80; i++){
 function drawStars(){
     for (let s of stars){
         ctx.beginPath();
-        ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+        ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
         ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
         ctx.fill();
 
-        s.alpha += (Math.random() - 0.5) *0.05;
+        s.alpha += (Math.random() - 0.5) * 0.05;
         s.alpha = Math.max(0.1, Math.min(1, s.alpha));
     }
 }
 
+// 🎲 random
 function random(min, max) {
     return Math.random() * (max - min) + min;
 }
 
+// 🌸 flores
 let flowers = [];
 
 function createFlower(x, y){
@@ -42,6 +46,27 @@ function createFlower(x, y){
     });
 }
 
+// 🌱 aparecen progresivamente
+function generateGardenAnimated() {
+    const margin = 100;
+    let count = 0;
+
+    function addFlower() {
+        if (count >= 10) return;
+
+        const x = random(margin, canvas.width - margin);
+        const y = random(margin, canvas.height - margin);
+
+        createFlower(x, y);
+        count++;
+
+        setTimeout(addFlower, 300);
+    }
+
+    addFlower();
+}
+
+// 🌼 flor base
 function drawFlowerStatic(x, y) {
     const petals = 7;
     const radius = 30;
@@ -70,6 +95,7 @@ function drawFlowerStatic(x, y) {
     ctx.fill();
 }
 
+// 🌬️ viento
 function drawFlowers(){
     for (let f of flowers){
         let sway = Math.sin(Date.now() * 0.002 + f.offset) * 5;
@@ -77,44 +103,56 @@ function drawFlowers(){
     }
 }
 
-function drawGardenAnimated() {
-    const margin = 80;
-    
-    for (let i = 0; i < 10; i++){
-        const x = random(margin, canvas.width - margin);
-        const y = random(margin, canvas.height - margin);
-        createFlower(x, y);
-    }
-}
+// 🌹 ROSA NIVEL DIOS (progresiva + orgánica)
+let roseProgress = 0;
 
 function drawRose(x, y, scale = 1) {
     ctx.save();
     ctx.translate(x, y);
     ctx.scale(scale, scale);
 
-    // pétalos (capas)
-    for (let i = 0; i < 20; i++) {
+    const totalPetals = 40;
+    const petalsToDraw = Math.floor(roseProgress);
+
+    for (let i = 0; i < petalsToDraw; i++) {
+        let angle = i * 0.25;
+
+        ctx.save();
+        ctx.rotate(angle);
+
         ctx.beginPath();
-        ctx.rotate(0.3);
 
-        ctx.fillStyle = `hsl(${340 + Math.random()*20}, 80%, ${50 + i}%)`;
+        let hue = 340 + Math.sin(i * 0.3) * 10;
+        let light = 40 + i * 0.8;
 
+        ctx.fillStyle = `hsl(${hue}, 80%, ${light}%)`;
+
+        // pétalo más complejo 🌹
         ctx.moveTo(0, 0);
-        ctx.quadraticCurveTo(40, -40, 0, -80);
-        ctx.quadraticCurveTo(-40, -40, 0, 0);
+        ctx.bezierCurveTo(30, -20, 50, -60, 0, -100);
+        ctx.bezierCurveTo(-50, -60, -30, -20, 0, 0);
 
+        ctx.fill();
+
+        ctx.restore();
+    }
+
+    // centro
+    if (roseProgress >= totalPetals) {
+        ctx.beginPath();
+        ctx.fillStyle = "darkred";
+        ctx.arc(0, 0, 12, 0, Math.PI * 2);
         ctx.fill();
     }
 
-    // centro más oscuro
-    ctx.beginPath();
-    ctx.fillStyle = "darkred";
-    ctx.arc(0, 0, 10, 0, Math.PI * 2);
-    ctx.fill();
-
     ctx.restore();
+
+    if (roseProgress < totalPetals) {
+        roseProgress += 0.3;
+    }
 }
 
+// 💖 mensaje
 function typeMessage(text){
     let i = 0;
     const el = document.getElementById("message");
@@ -130,8 +168,10 @@ function typeMessage(text){
     type();
 }
 
+// 🎬 LOOP
 function animate(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     drawStars();
     drawFlowers();
     drawRose(canvas.width/2, canvas.height/2, 1.2);
@@ -139,14 +179,17 @@ function animate(){
     requestAnimationFrame(animate);
 }
 
+// 🎵 música
 const music = document.getElementById("music");
 document.addEventListener("click", () =>{
     if (music) music.play();
 }, { once: true });
 
+// 🚀 INIT
+generateGardenAnimated();
 animate();
-drawGardenAnimated();
 
+// 💬 mensajes
 const messages = [
     "eres la coincidencia que el universo conspiró para regalarme ✨",
     "si el destino escribe historias, la nuestra es mi favorita 💫",
@@ -233,6 +276,6 @@ const messages = [
     "eres mi infinito favorito 🌌",
     "contigo todo es real 💫",
     "eres la razón de mi universo 💖"
-];
+]
 
 typeMessage("Karla " + messages[Math.floor(Math.random()*messages.length)]);
