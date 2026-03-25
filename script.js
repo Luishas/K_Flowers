@@ -1,7 +1,122 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
 ctx.shadowBlur = 15;
 ctx.shadowColor = "white";
+
+let stars = [];
+for (let i = 0; i < 80; i++){
+    stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2,
+        alpha: Math.random()
+    });
+}
+
+function drawStars(){
+    for (let s of stars){
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        s.alpha += (Math.random() - 0.5) *0.05;
+        s.alpha = Math.max(0.1, Math.min(1, s.alpha));
+    }
+}
+
+function random(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+function drawFlowerAnimated(x, y, callback) {
+    const petals = Math.floor(Math.random()* 4) + 6;
+    const radius = random() * 30 + 30;
+
+    let currentPetal = 0;
+
+    function drawNextPetal() {
+        if (currentPetal >= petals) {
+            ctx.beginPath();
+            ctx.fillStyle = "yellow";
+            ctx.arc(x, y, radius / 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (callback) callback();
+            return;
+        }
+
+        const angle = (Math.PI * 2 / petals) * currentPetal;
+
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+
+        ctx.beginPath();
+        ctx.fillStyle = `hsl(${random(0,360)}, 80%, 60%)`;
+
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(radius, -radius, 0, -radius * 2);
+        ctx.quadraticCurveTo(-radius, -radius, 0, 0);
+
+        ctx.fill();
+
+        ctx.restore();
+
+        currentPetal++;
+
+        setTimeout(drawNextPetal, 80); 
+    }
+
+    drawNextPetal();
+}
+
+function drawGardenAnimated() {
+    let i = 0;
+
+    function nextFlower() {
+        if (i >= 8) return;
+
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+
+        drawFlowerAnimated(x, y, () => {
+            i++;
+            setTimeout(nextFlower, 200); 
+        });
+    }
+
+    nextFlower();
+}
+
+drawGardenAnimated();
+
+function typeMessage(text){
+    let i = 0;
+    const el = document.getElementById("message");
+    el.innerHTML = "";
+
+    function type(){
+        if (i < text.lenght){
+            el.innerHTML += text[i];
+            i++;
+            setTimeout(type, 40);
+        }
+    }
+    type();
+}
+
+function animate(){
+    ctx.clearReact(0, 0, canvas.width, canvas.height);
+    drawStars();
+    requestAnimationFrame(animate);
+}
+
+animate();
+drawGardenAnimated();
 
 const messages = [
     "eres la coincidencia que el universo conspiró para regalarme ✨",
@@ -91,71 +206,4 @@ const messages = [
     "eres la razón de mi universo 💖"
 ];
 
-function random(min, max) {
-    return Math.random() * (max - min) + min;
-}
-
-function drawFlowerAnimated(x, y, callback) {
-    const petals = Math.floor(random(6, 10));
-    const radius = random(30, 50);
-
-    let currentPetal = 0;
-
-    function drawNextPetal() {
-        if (currentPetal >= petals) {
-            // centro 🌼
-            ctx.beginPath();
-            ctx.fillStyle = "yellow";
-            ctx.arc(x, y, radius / 4, 0, Math.PI * 2);
-            ctx.fill();
-
-            if (callback) callback();
-            return;
-        }
-
-        const angle = (Math.PI * 2 / petals) * currentPetal;
-
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(angle);
-
-        ctx.beginPath();
-        ctx.fillStyle = `hsl(${random(0,360)}, 80%, 60%)`;
-
-        ctx.moveTo(0, 0);
-        ctx.quadraticCurveTo(radius, -radius, 0, -radius * 2);
-        ctx.quadraticCurveTo(-radius, -radius, 0, 0);
-
-        ctx.fill();
-
-        ctx.restore();
-
-        currentPetal++;
-
-        setTimeout(drawNextPetal, 120); // 👈 velocidad animación
-    }
-
-    drawNextPetal();
-}
-function drawGardenAnimated() {
-    let i = 0;
-
-    function nextFlower() {
-        if (i >= 8) return;
-
-        const x = random(100, 700);
-        const y = random(100, 500);
-
-        drawFlowerAnimated(x, y, () => {
-            i++;
-            setTimeout(nextFlower, 300); // delay entre flores
-        });
-    }
-
-    nextFlower();
-}
-
-drawGardenAnimated();
-
-document.getElementById("message").innerText =
-    "Karla " + messages[Math.floor(Math.random() * messages.length)];
+typeMessage("Karla " + messages[Math.floor(Math.random()*messages.lenght)]);
