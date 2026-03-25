@@ -42,7 +42,14 @@ function createFlower(x, y){
     flowers.push({
         x,
         y,
-        offset: Math.random() * 1000
+        offset: Math.random() * 1000,
+
+        petals: Math.floor(random(5, 10)),
+        radius: random(20, 50),
+        hue: random(0, 360),
+        centerSize: random(5, 10),
+        petalWidth: random(0.5, 1.5),
+        petalLength: random(1, 2)
     });
 }
 
@@ -52,7 +59,7 @@ function generateGardenAnimated() {
     let count = 0;
 
     function addFlower() {
-        if (count >= 10) return;
+        if (count >= 15) return;
 
         const x = random(margin, canvas.width - margin);
         const y = random(margin, canvas.height - margin);
@@ -68,8 +75,7 @@ function generateGardenAnimated() {
 
 // 🌼 flor base
 function drawFlowerStatic(x, y) {
-    const petals = 7;
-    const radius = 30;
+    const { x, y, petals, radius, hue, centerSize, petalWidth, petalLength } = f;
 
     for (let i = 0; i < petals; i++) {
         const angle = (Math.PI * 2 / petals) * i;
@@ -79,19 +85,29 @@ function drawFlowerStatic(x, y) {
         ctx.rotate(angle);
 
         ctx.beginPath();
-        ctx.fillStyle = `hsl(${(i*40)%360}, 80%, 60%)`;
+        ctx.fillStyle = `hsl(${hue + i*10}, 80%, 60%)`;
 
         ctx.moveTo(0, 0);
-        ctx.quadraticCurveTo(radius, -radius, 0, -radius * 2);
-        ctx.quadraticCurveTo(-radius, -radius, 0, 0);
+        ctx.quadraticCurveTo(
+            radius * petalWidth,
+            -radius * petalLength,
+            0,
+            -radius * 2
+        );
+        ctx.quadraticCurveTo(
+            -radius * petalWidth,
+            -radius * petalLength,
+            0,
+            0
+        );
 
         ctx.fill();
         ctx.restore();
     }
 
     ctx.beginPath();
-    ctx.fillStyle = "yellow";
-    ctx.arc(x, y, 8, 0, Math.PI * 2);
+    ctx.fillStyle = `hsl(${hue + 180}, 80%, 60%)`;
+    ctx.arc(x, y, centerSize, 0, Math.PI * 2);
     ctx.fill();
 }
 
@@ -99,70 +115,14 @@ function drawFlowerStatic(x, y) {
 function drawFlowers(){
     for (let f of flowers){
         let sway = Math.sin(Date.now() * 0.002 + f.offset) * 5;
-        drawFlowerStatic(f.x + sway, f.y);
+        drawFlowerStatic({
+            ...f,
+            x: f.x + sway,
+            y: f.y
+        });
     }
 }
 
-// 🌹 ROSA NIVEL DIOS (progresiva + orgánica)
-let roseProgress = 0;
-
-function drawRose(x, y, scale = 1) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.scale(scale, scale);
-
-    const totalPetals = 50;
-    const petalsToDraw = Math.floor(roseProgress);
-
-    for (let i = 0; i < petalsToDraw; i++) {
-
-        let angle = i * 0.18; // menos uniforme
-        let spread = 1 + i * 0.02; // expansión progresiva
-
-        ctx.save();
-        ctx.rotate(angle);
-
-        ctx.beginPath();
-
-        let hue = 340 + Math.sin(i * 0.2) * 15;
-        let light = 35 + i * 0.7;
-
-        ctx.fillStyle = `hsl(${hue}, 80%, ${light}%)`;
-
-        // 🌹 pétalo irregular (clave)
-        ctx.moveTo(0, 0);
-
-        ctx.bezierCurveTo(
-            20 * spread, -10 * spread,
-            60 * spread, -60 * spread,
-            0, -100 * spread
-        );
-
-        ctx.bezierCurveTo(
-            -40 * spread, -60 * spread,
-            -10 * spread, -10 * spread,
-            0, 0
-        );
-
-        ctx.fill();
-        ctx.restore();
-    }
-
-    // centro
-    if (roseProgress >= totalPetals) {
-        ctx.beginPath();
-        ctx.fillStyle = "#5a0a0a";
-        ctx.arc(0, 0, 10, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
-    ctx.restore();
-
-    // ⏳ más lento (control animación)
-    if (roseProgress < totalPetals) {
-        roseProgress += 0.1;
-    }
-}
 
 // 💖 mensaje
 function typeMessage(text){
