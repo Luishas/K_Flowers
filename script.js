@@ -74,7 +74,7 @@ function generateGardenAnimated() {
 }
 
 // 🌼 flor base
-function drawFlowerStatic(x, y) {
+function drawFlowerStatic(f) {
     const { x, y, petals, radius, hue, centerSize, petalWidth, petalLength } = f;
 
     for (let i = 0; i < petals; i++) {
@@ -146,8 +146,6 @@ function animate(){
 
     drawStars();
     drawFlowers();
-    drawRose(canvas.width/2, canvas.height/2, 1.2);
-
     requestAnimationFrame(animate);
 }
 
