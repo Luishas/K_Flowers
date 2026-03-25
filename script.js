@@ -78,10 +78,11 @@ function drawGardenAnimated() {
     let i = 0;
 
     function nextFlower() {
+        const margin = 80;
         if (i >= 8) return;
 
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
+        const x = random(margin, canvas.width - margin);
+        const y = random(margin, canvas.height - margin);
 
         drawFlowerAnimated(x, y, () => {
             i++;
