@@ -32,65 +32,87 @@ function random(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-function drawFlowerAnimated(x, y, callback) {
-    const petals = Math.floor(Math.random()* 4) + 6;
-    const radius = random(30, 60);
+let flowers = [];
 
-    let currentPetal = 0;
+function createFlower(x, y){
+    flowers.push({
+        x,
+        y,
+        offset: Math.random() * 1000
+    });
+}
 
-    function drawNextPetal() {
-        if (currentPetal >= petals) {
-            ctx.beginPath();
-            ctx.fillStyle = "yellow";
-            ctx.arc(x, y, radius / 4, 0, Math.PI * 2);
-            ctx.fill();
+function drawFlowerStatic(x, y) {
+    const petals = 7;
+    const radius = 30;
 
-            if (callback) callback();
-            return;
-        }
-
-        const angle = (Math.PI * 2 / petals) * currentPetal;
+    for (let i = 0; i < petals; i++) {
+        const angle = (Math.PI * 2 / petals) * i;
 
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(angle);
 
         ctx.beginPath();
-        ctx.fillStyle = `hsl(${random(0,360)}, 80%, 60%)`;
+        ctx.fillStyle = `hsl(${(i*40)%360}, 80%, 60%)`;
 
         ctx.moveTo(0, 0);
         ctx.quadraticCurveTo(radius, -radius, 0, -radius * 2);
         ctx.quadraticCurveTo(-radius, -radius, 0, 0);
 
         ctx.fill();
-
         ctx.restore();
-
-        currentPetal++;
-
-        setTimeout(drawNextPetal, 80); 
     }
 
-    drawNextPetal();
+    ctx.beginPath();
+    ctx.fillStyle = "yellow";
+    ctx.arc(x, y, 8, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+function drawFlowers(){
+    for (let f of flowers){
+        let sway = Math.sin(Date.now() * 0.002 + f.offset) * 5;
+        drawFlowerStatic(f.x + sway, f.y);
+    }
 }
 
 function drawGardenAnimated() {
-    let i = 0;
-
-    function nextFlower() {
-        const margin = 80;
-        if (i >= 8) return;
-
+    const margin = 80;
+    
+    for (let i = 0; i < 10; i++){
         const x = random(margin, canvas.width - margin);
         const y = random(margin, canvas.height - margin);
+        createFlower(x, y);
+    }
+}
 
-        drawFlowerAnimated(x, y, () => {
-            i++;
-            setTimeout(nextFlower, 200); 
-        });
+function drawRose(x, y, scale = 1) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+
+    // pétalos (capas)
+    for (let i = 0; i < 20; i++) {
+        ctx.beginPath();
+        ctx.rotate(0.3);
+
+        ctx.fillStyle = `hsl(${340 + Math.random()*20}, 80%, ${50 + i}%)`;
+
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(40, -40, 0, -80);
+        ctx.quadraticCurveTo(-40, -40, 0, 0);
+
+        ctx.fill();
     }
 
-    nextFlower();
+    // centro más oscuro
+    ctx.beginPath();
+    ctx.fillStyle = "darkred";
+    ctx.arc(0, 0, 10, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
 }
 
 function typeMessage(text){
@@ -109,10 +131,18 @@ function typeMessage(text){
 }
 
 function animate(){
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawStars();
+    drawFlowers();
+    drawRose(canvas.width/2, canvas.height/2, 1.2);
+
     requestAnimationFrame(animate);
 }
+
+const music = document.getElementById("music");
+document.addEventListener("click", () =>{
+    if (music) music.play();
+}, { once: true });
 
 animate();
 drawGardenAnimated();
