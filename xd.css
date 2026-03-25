@@ -12,8 +12,33 @@ canvas {
   pointer-events: none;
 }
 
+#textBox {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 60%;        /* 🔥 limita el ancho */
+  max-width: 600px;   /* 🔥 evita que sea gigante */
+  padding: 20px;
+
+  text-align: center;
+  color: white;
+  font-size: 20px;
+
+  background: rgba(0, 0, 0, 0.4); /* ✨ efecto cuadro */
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(255,255,255,0.3);
+
+  z-index: 10;
+}
+#textBox {
+  backdrop-filter: blur(8px);
+}
+
 #message {
- 
+  white-space: normal; /* permite que el texto haga salto de línea */
+  word-wrap: break-word;
 }
 
 button {
