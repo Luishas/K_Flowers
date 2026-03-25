@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Jardín para ti 🌹</title>
+    <title>Fantasy Garden 🌹</title>
     <style>
         body {
             margin: 0;
@@ -17,19 +17,25 @@
             margin: auto;
         }
         #message{
-            position: absolute;
-            bottom: 40px;
+            position: fixed;
+            bottom: 80px;
             width: 100%;
-            text-align: center;
-            color: white;
             font-size: clamp(14px, 2vw, 22px);
             font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            pointer-events: none;
+            max-width: 80%;
         }
     </style>
 </head>
 <body>
 
-<h1>🌹 Jardín para ti</h1>
+<h1>🌹 A Fantasy Garden for you Principessa, Je t'aime 🌹</h1>
 <button id="startBtn">🌸 Iniciar</button>
 <button id="resetBtn">🔄 Reiniciar</button>
 <canvas id="canvas" width="800" height="600"></canvas>
