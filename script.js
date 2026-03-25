@@ -254,14 +254,14 @@ const music = document.getElementById("music");
 const startBtn = document.getElementById("startBtn");
 const resetBtn = document.getElementById("resetBtn");
 
-startBtn.onClick = () => {
+startBtn.onclick = () => {
     music.play();
     generating = true;
     generateGardenAnimated();
     typeMessage("Karla " + messages[Math.floor(Math.random()*messages.length)]);
 }
 
-resetBtn.onClick = () => {
+resetBtn.onclick = () => {
     flowers = [];
     generateStars();
     generating = false;
@@ -270,7 +270,7 @@ resetBtn.onClick = () => {
     music.currentTime = 0;
 }
 // 🚀 INIT
-generateGardenAnimated();
+generateStars();
 animate();
 
 
