@@ -97,29 +97,39 @@ function random(min, max) {
 
 function drawFlower(x, y) {
     const petals = Math.floor(random(6, 10));
-    const radius = random(20, 40);
+    const radius = random(30, 50);
 
     for (let i = 0; i < petals; i++) {
         const angle = (Math.PI * 2 / petals) * i;
-        
-        const px = x + Math.cos(angle) * radius;
-        const py = y + Math.sin(angle) * radius;
+
+        ctx.save(); // guarda estado
+        ctx.translate(x, y);
+        ctx.rotate(angle);
 
         ctx.beginPath();
         ctx.fillStyle = `hsl(${random(0,360)}, 80%, 60%)`;
-        ctx.arc(px, py, radius / 2, 0, Math.PI * 2);
+
+        // pétalo tipo hoja 🌿
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(radius, -radius, 0, -radius * 2);
+        ctx.quadraticCurveTo(-radius, -radius, 0, 0);
+
         ctx.fill();
+
+        ctx.restore(); // vuelve al estado original
     }
 
+    // centro 🌼
     ctx.beginPath();
     ctx.fillStyle = "yellow";
-    ctx.arc(x, y, radius / 3, 0, Math.PI * 2);
+    ctx.arc(x, y, radius / 4, 0, Math.PI * 2);
     ctx.fill();
 
+    // tallo 🌿
     ctx.beginPath();
     ctx.strokeStyle = "green";
     ctx.moveTo(x, y);
-    ctx.lineTo(x, y + 40);
+    ctx.lineTo(x, y + 50);
     ctx.stroke();
 }
 
