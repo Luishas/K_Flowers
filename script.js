@@ -34,7 +34,7 @@ function random(min, max) {
 
 function drawFlowerAnimated(x, y, callback) {
     const petals = Math.floor(Math.random()* 4) + 6;
-    const radius = random() * 30 + 30;
+    const radius = random(30, 60);
 
     let currentPetal = 0;
 
@@ -92,15 +92,13 @@ function drawGardenAnimated() {
     nextFlower();
 }
 
-drawGardenAnimated();
-
 function typeMessage(text){
     let i = 0;
     const el = document.getElementById("message");
     el.innerHTML = "";
 
     function type(){
-        if (i < text.lenght){
+        if (i < text.length){
             el.innerHTML += text[i];
             i++;
             setTimeout(type, 40);
@@ -110,7 +108,7 @@ function typeMessage(text){
 }
 
 function animate(){
-    ctx.clearReact(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawStars();
     requestAnimationFrame(animate);
 }
@@ -206,4 +204,4 @@ const messages = [
     "eres la razón de mi universo 💖"
 ];
 
-typeMessage("Karla " + messages[Math.floor(Math.random()*messages.lenght)]);
+typeMessage("Karla " + messages[Math.floor(Math.random()*messages.length)]);
