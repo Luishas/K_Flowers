@@ -97,7 +97,7 @@ function random(min, max) {
 
 function drawFlower(x, y) {
     const petals = Math.floor(random(6, 10));
-    const size = random(20, 40);
+    const radius = random(20, 40);
 
     for (let i = 0; i < petals; i++) {
         const angle = (Math.PI * 2 / petals) * i;
@@ -113,7 +113,7 @@ function drawFlower(x, y) {
 
     ctx.beginPath();
     ctx.fillStyle = "yellow";
-    ctx.arc(x, y, radius / 3, 0, matchMedia.PI * 2);
+    ctx.arc(x, y, radius / 3, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.beginPath();
