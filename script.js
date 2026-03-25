@@ -60,7 +60,7 @@ function generateGardenAnimated() {
         createFlower(x, y);
         count++;
 
-        setTimeout(addFlower, 300);
+        setTimeout(addFlower, 600);
     }
 
     addFlower();
@@ -111,44 +111,56 @@ function drawRose(x, y, scale = 1) {
     ctx.translate(x, y);
     ctx.scale(scale, scale);
 
-    const totalPetals = 40;
+    const totalPetals = 50;
     const petalsToDraw = Math.floor(roseProgress);
 
     for (let i = 0; i < petalsToDraw; i++) {
-        let angle = i * 0.25;
+
+        let angle = i * 0.18; // menos uniforme
+        let spread = 1 + i * 0.02; // expansión progresiva
 
         ctx.save();
         ctx.rotate(angle);
 
         ctx.beginPath();
 
-        let hue = 340 + Math.sin(i * 0.3) * 10;
-        let light = 40 + i * 0.8;
+        let hue = 340 + Math.sin(i * 0.2) * 15;
+        let light = 35 + i * 0.7;
 
         ctx.fillStyle = `hsl(${hue}, 80%, ${light}%)`;
 
-        // pétalo más complejo 🌹
+        // 🌹 pétalo irregular (clave)
         ctx.moveTo(0, 0);
-        ctx.bezierCurveTo(30, -20, 50, -60, 0, -100);
-        ctx.bezierCurveTo(-50, -60, -30, -20, 0, 0);
+
+        ctx.bezierCurveTo(
+            20 * spread, -10 * spread,
+            60 * spread, -60 * spread,
+            0, -100 * spread
+        );
+
+        ctx.bezierCurveTo(
+            -40 * spread, -60 * spread,
+            -10 * spread, -10 * spread,
+            0, 0
+        );
 
         ctx.fill();
-
         ctx.restore();
     }
 
     // centro
     if (roseProgress >= totalPetals) {
         ctx.beginPath();
-        ctx.fillStyle = "darkred";
-        ctx.arc(0, 0, 12, 0, Math.PI * 2);
+        ctx.fillStyle = "#5a0a0a";
+        ctx.arc(0, 0, 10, 0, Math.PI * 2);
         ctx.fill();
     }
 
     ctx.restore();
 
+    // ⏳ más lento (control animación)
     if (roseProgress < totalPetals) {
-        roseProgress += 0.3;
+        roseProgress += 0.1;
     }
 }
 
@@ -162,7 +174,7 @@ function typeMessage(text){
         if (i < text.length){
             el.innerHTML += text[i];
             i++;
-            setTimeout(type, 40);
+            setTimeout(type, 100);
         }
     }
     type();
@@ -180,10 +192,10 @@ function animate(){
 }
 
 // 🎵 música
-const music = document.getElementById("music");
-document.addEventListener("click", () =>{
-    if (music) music.play();
-}, { once: true });
+function startMusic(){
+    const music = document.getElementById("music");
+    music.play();
+}
 
 // 🚀 INIT
 generateGardenAnimated();
