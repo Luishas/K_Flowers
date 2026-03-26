@@ -18,15 +18,15 @@ canvas {
   left: 50%;
   transform: translate(-50%, -50%);
 
-  width: 60%;        /* 🔥 limita el ancho */
-  max-width: 600px;   /* 🔥 evita que sea gigante */
+  width: 60%;        
+  max-width: 600px;   
   padding: 20px;
 
   text-align: center;
   color: white;
   font-size: 20px;
 
-  background: rgba(0, 0, 0, 0.4); /* ✨ efecto cuadro */
+  background: rgba(0, 0, 0, 0.4); 
   border-radius: 15px;
   box-shadow: 0 0 20px rgba(255,255,255,0.3);
 
@@ -37,15 +37,15 @@ canvas {
 }
 
 #message {
-  white-space: normal; /* permite que el texto haga salto de línea */
+  white-space: normal; 
   word-wrap: break-word;
 }
 
 button {
   position: absolute;
   bottom: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 20px 30px;
+  font-size: 20px;
   cursor: pointer;
   z-index: 10;
 }
@@ -53,10 +53,10 @@ button {
   position: fixed;
   bottom: 10px;
   left: 10px;
-  width: 80px;   /* adjust size */
+  width: 80px;   
   height: auto;
-  z-index: 1000; /* keeps it above other elements */
+  z-index: 1000; 
 }
 
-#startBtn { left: 20px; }
-#resetBtn { right: 20px; }
+#startBtn { left: 30px; }
+#resetBtn { right: 30px; }
